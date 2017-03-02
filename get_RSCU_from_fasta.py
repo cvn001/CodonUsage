@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-# rscu.py
-# written 2/3/2017 by Xiangchen Li
+# get_RSCU_from_fasta.py
+# written on 2/3/2017 by Xiangchen Li
 
 import time
 import argparse
@@ -172,7 +172,7 @@ def output(rscu_dict, gene_list, sorted_codon_list, sorted_aa):
 
 
 if __name__ == '__main__':
-    program_name = 'get_RSCU_for_fasta.py'
+    program_name = 'get_RSCU_from_fasta.py'
     last_updated = '2/3/2017'
     by = 'Xiangchen Li'
     version_number = '1.0'
@@ -207,7 +207,7 @@ if __name__ == '__main__':
                              'in to view its count data individually in standard output.')
     args = parser.parse_args()
     # Usage
-    # get_RSCU_for_fasta.py -i sequences.fasta -o codon_RSCUs.txt
+    # get_RSCU_from_fasta.py -i sequences.fasta -o codon_RSCUs.txt
     # Assign Arguments
     infile_name = args.input
     outfile_name = args.output
