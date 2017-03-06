@@ -76,7 +76,7 @@ def multi_process(each_type):
 
 
 def main():
-    type_list = ['enc', 'gc3s']
+    type_list = ['gc3s']
     for each_type in type_list:
         logger.info('Processing {0} Calculating'.join(each_type.upper()))
         multi_process(each_type)
