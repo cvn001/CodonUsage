@@ -162,13 +162,13 @@ if __name__ == '__main__':
     outfile_name = args.out
     wi_file = args.wi
     wi_column = int(args.col) - 1
-    nucleotide_list = ['A', 'U', 'C', 'G']
+    nucleotide_list = ['A', 'T', 'C', 'G']
     exclude = args.exclude_cpg
-    cpg_codon_list = ['UCU', 'UCC', 'UCA', 'UCG', 'AGU', 'AGC',  # serine
-                      'CCU', 'CCC', 'CCA', 'CCG',                # proline
-                      'ACU', 'ACC', 'ACA', 'ACG',                # threonine
-                      'GCU', 'GCC', 'GCA', 'GCG',                # alanine
-                      'CGU', 'CGC', 'CGA', 'CGG', 'AGA', 'AGG']  # arginine
+    cpg_codon_list = ['TCT', 'TCC', 'TCA', 'TCG', 'AGT', 'AGC',  # serine
+                      'CCT', 'CCC', 'CCA', 'CCG',                # proline
+                      'ACT', 'ACC', 'ACA', 'ACG',                # threonine
+                      'GCT', 'GCC', 'GCA', 'GCG',                # alanine
+                      'CGT', 'CGC', 'CGA', 'CGG', 'AGA', 'AGG']  # arginine
     if exclude == 'yes':
         print("\nNote, calculating CAI with amino acids coded for by CpG codons excluded.")
     elif exclude == 'only':
@@ -192,19 +192,19 @@ if __name__ == '__main__':
     GCA	Ala	0.956834532374	1.33
     GCC	Ala	0.575539568345	0.8
     GCG	Ala	0.338129496403	0.47
-    GCU	Ala	1.0	1.39
+    GCT	Ala	1.0	1.39
     AGA	Arg	1.0	1.98
     AGG	Arg	0.570707070707	1.13
     CGA	Arg	0.484848484848	0.96
     CGC	Arg	0.338383838384	0.67
     CGG	Arg	0.222222222222	0.44
-    CGU	Arg	0.414141414141	0.82
+    CGT	Arg	0.414141414141	0.82
     AAC	Asn	0.834862385321	0.91
-    AAU	Asn	1.0	1.09
+    AAT	Asn	1.0	1.09
     GAC	Asp	0.652892561983	0.79
-    GAU	Asp	1.0	1.21
-    UGC	Cys	0.754385964912	0.86
-    UGU	Cys	1.0	1.14
+    GAT	Asp	1.0	1.21
+    TGC	Cys	0.754385964912	0.86
+    TGT	Cys	1.0	1.14
     CAA	Gln	1.0	1.06
     CAG	Gln	0.88679245283	0.94
     GAA	Glu	1.0	1.21
@@ -212,42 +212,42 @@ if __name__ == '__main__':
     GGA	Gly	1.0	1.56
     GGC	Gly	0.519230769231	0.81
     GGG	Gly	0.339743589744	0.53
-    GGU	Gly	0.711538461538	1.11
+    GGT	Gly	0.711538461538	1.11
     CAC	His	0.754385964912	0.86
-    CAU	His	1.0	1.14
-    AUA	Ile	0.478571428571	0.67
-    AUC	Ile	0.671428571429	0.94
-    AUU	Ile	1.0	1.4
-    CUA	Leu	0.344827586207	0.5
-    CUC	Leu	0.475862068966	0.69
-    CUG	Leu	0.793103448276	1.15
-    CUU	Leu	0.965517241379	1.4
-    UUA	Leu	0.565517241379	0.82
-    UUG	Leu	1.0	1.45
+    CAT	His	1.0	1.14
+    ATA	Ile	0.478571428571	0.67
+    ATC	Ile	0.671428571429	0.94
+    ATT	Ile	1.0	1.4
+    CTA	Leu	0.344827586207	0.5
+    CTC	Leu	0.475862068966	0.69
+    CTG	Leu	0.793103448276	1.15
+    CTT	Leu	0.965517241379	1.4
+    TTA	Leu	0.565517241379	0.82
+    TTG	Leu	1.0	1.45
     AAA	Lys	1.0	1.09
     AAG	Lys	0.834862385321	0.91
-    AUG	Met	1.0	1.0
-    UUC	Phe	0.639344262295	0.78
-    UUU	Phe	1.0	1.22
+    ATG	Met	1.0	1.0
+    TTC	Phe	0.639344262295	0.78
+    TTT	Phe	1.0	1.22
     CCA	Pro	1.0	1.63
     CCC	Pro	0.39263803681	0.64
     CCG	Pro	0.282208588957	0.46
-    CCU	Pro	0.779141104294	1.27
+    CCT	Pro	0.779141104294	1.27
     AGC	Ser	0.698529411765	0.95
-    AGU	Ser	0.882352941176	1.2
-    UCA	Ser	1.0	1.36
-    UCC	Ser	0.558823529412	0.76
-    UCG	Ser	0.389705882353	0.53
-    UCU	Ser	0.882352941176	1.2
+    AGT	Ser	0.882352941176	1.2
+    TCA	Ser	1.0	1.36
+    TCC	Ser	0.558823529412	0.76
+    TCG	Ser	0.389705882353	0.53
+    TCT	Ser	0.882352941176	1.2
     ACA	Thr	1.0	1.53
     ACC	Thr	0.490196078431	0.75
     ACG	Thr	0.346405228758	0.53
-    ACU	Thr	0.777777777778	1.19
-    UGG	Trp	1.0	1.0
-    UAC	Tyr	0.960784313725	0.98
-    UAU	Tyr	1.0	1.02
-    GUA	Val	0.467153284672	0.64
-    GUC	Val	0.569343065693	0.78
-    GUG	Val	0.890510948905	1.22
-    GUU	Val	1.0	1.37
+    ACT	Thr	0.777777777778	1.19
+    TGG	Trp	1.0	1.0
+    TAC	Tyr	0.960784313725	0.98
+    TAT	Tyr	1.0	1.02
+    GTA	Val	0.467153284672	0.64
+    GTC	Val	0.569343065693	0.78
+    GTG	Val	0.890510948905	1.22
+    GTT	Val	1.0	1.37
     """

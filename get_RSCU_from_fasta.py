@@ -108,7 +108,7 @@ def calculate_rscu(aa_list, rev_code, gene_list, data_dict):
             number_synonymous = float(len(rev_code[aa]))
             aa_count = float(aa_totals[aa])
             if aa_count == 0:
-                rscu_dict[gene][codon] = "NA"
+                rscu_dict[gene][codon] = "0.00"
                 continue
             expected = aa_count / number_synonymous
             # rather than count missing codons as zero, all codons get a minimum count of 1

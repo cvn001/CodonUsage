@@ -65,7 +65,7 @@ def calculate_w(tmp_rscu_dict):
         header = "codon\taa\twi\trscu"
         out.write(header)
         aa_list = list(tmp_rscu_dict.keys())
-        aa_list.remove('STOP')
+        # aa_list.remove('STOP')
         aa_list.sort()
         for i in aa_list:
             rscus = tmp_rscu_dict[i][1]

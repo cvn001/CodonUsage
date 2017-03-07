@@ -54,19 +54,11 @@ def run_codonw(each_type, fasta_file, out_file):
 def multi_process(each_type):
     run_list = []
     type_dir = os.path.join(args.outdirname, each_type)
-    if not os.path.exists(type_dir):
-        os.makedirs(type_dir)
-    else:
-        shutil.rmtree(type_dir)
-        os.makedirs(type_dir)
-    out_dir = os.path.join(type_dir, 'out')
-    if not os.path.exists(out_dir):
-        os.makedirs(out_dir)
     for root, dirs, files in os.walk(args.indirname):
         for each_file in files:
             strain_id = os.path.splitext(each_file)[0]
             fasta_file = os.path.join(args.indirname, each_file)
-            out_file = os.path.join(out_dir, strain_id + '.out')
+            out_file = os.path.join(type_dir, strain_id + '.out')
             run_list.append([fasta_file, out_file])
     p = Pool(args.threads)
     for each_item in run_list:
