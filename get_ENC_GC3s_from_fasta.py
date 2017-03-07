@@ -54,6 +54,8 @@ def run_codonw(each_type, fasta_file, out_file):
 def multi_process(each_type):
     run_list = []
     type_dir = os.path.join(args.outdirname, each_type)
+    if not os.path.exists(type_dir):
+        os.makedirs(type_dir)
     for root, dirs, files in os.walk(args.indirname):
         for each_file in files:
             strain_id = os.path.splitext(each_file)[0]
