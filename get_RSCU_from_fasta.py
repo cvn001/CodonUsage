@@ -7,6 +7,7 @@ import time
 import argparse
 import numpy as np
 from Bio import SeqIO
+from collections import defaultdict
 
 
 # use the genetic code dictionary above to build
@@ -16,7 +17,7 @@ def create_count_dict():
     to keep counts of codons in"""
     tmp_codon_list = list(genetic_code.keys())
     tmp_codon_list.sort()
-    counts_dict = {}
+    counts_dict = defaultdict()
     for i in genetic_code.keys():
         counts_dict[i] = 0
     return counts_dict
@@ -25,11 +26,13 @@ def create_count_dict():
 # we also need the reverse dictionary, where each list of synonymous
 # codons is paired with its amino acid
 def build_inverse_code():
-    """Function to reverse the genetic code entered above
+    """
+    Function to reverse the genetic code entered above
     so that amino acids key to lists of synonymous codons
-    that code for them"""
+    that code for them
+    """
     aa_list = []
-    rev_code = {}
+    rev_code = defaultdict()
     for i in codon_list:
         aa = genetic_code[i]
         if aa not in aa_list:
@@ -46,7 +49,7 @@ def get_counts():
     count the codon use
     """
     gene_list = []
-    data_dict = {}
+    data_dict = defaultdict()
     total_ambiguous = 0  # keep count of ambiguous codons that have 'N's in them
     total_codons = 0
     fas_seqs = SeqIO.parse(open(infile_name), 'fasta')
@@ -73,8 +76,8 @@ def get_counts():
                 continue
             seq_codons.append(codon)
             data_dict[seq_id][codon] += 1
-    print("\n{0} out of {1} Codons were ambiguous and not scored in the RSCU calculations".format(total_ambiguous,
-                                                                                                  total_codons))
+    print("\n{0} out of {1} Codons were ambiguous and not "
+          "scored in the RSCU calculations".format(total_ambiguous, total_codons))
     return gene_list, data_dict
 
 
@@ -82,7 +85,7 @@ def get_aa_totals(aa_list, codon_count_dict):
     """Function to get the total number of times an amino
     acid appears in a sequence by totaling the counts of its
     synonymous codons"""
-    aa_totals = {}
+    aa_totals = defaultdict()
     for aa in aa_list:
         aa_totals[aa] = 0
     for codon in codon_list:
@@ -97,9 +100,9 @@ def calculate_rscu(aa_list, rev_code, gene_list, data_dict):
     if interesting in aa_list:
         print("\n-----------------------------------")
         print("Results for amino acid of interest: {0}".format(interesting))
-    rscu_dict = {}
+    rscu_dict = defaultdict()
     for gene in gene_list:
-        rscu_dict[gene] = {}
+        rscu_dict[gene] = defaultdict()
         codon_count_dict = data_dict[gene]
         aa_totals = get_aa_totals(aa_list, codon_count_dict)
         for codon in codon_list:
@@ -177,7 +180,8 @@ if __name__ == '__main__':
     by = 'Xiangchen Li'
     version_number = '1.0'
     print("\nRunning Program {0}...".format(program_name))
-    version_string = '{0} version {1} Last Updated {2} by {3}'.format(program_name, version_number, last_updated, by)
+    version_string = '{0} version {1} Last Updated {2} by {3}'.format(program_name, version_number,
+                                                                      last_updated, by)
     description = '''
     Description:
     This program reads through a fasta file of coding sequences.
