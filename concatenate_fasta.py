@@ -19,15 +19,15 @@ def read_sub(subset_file):
     return sub_list
 
 
-def read_file(infile_name, subset_file):
+def read_file(input_file, output_file, nucleotide_list, subset_file):
     """
     Function to read in a file as a list of lists
     """
     # Iterate through the seqs
     seqs_num = 0
-    with open(output_file_name, 'w') as out:
-        out.write('>{0}\n'.format(output_file_name))
-        fas_seqs = SeqIO.parse(open(infile_name), 'fasta')
+    with open(output_file, 'w') as out:
+        out.write('>{0}\n'.format(output_file))
+        fas_seqs = SeqIO.parse(open(input_file), 'fasta')
         if subset_file == "NONE":
             print("\nNo subset file detected. Concatenating the entire fasta")
             for seq in fas_seqs:
@@ -60,41 +60,42 @@ def read_file(infile_name, subset_file):
             else:
                 print("\nFound {0} of the {1} sequences in the subset file".format(str(seqs_num), str(len(sub_list))))
 
-if __name__ == '__main__':
-    program_name = 'concatenate_fasta.py'
-    last_updated = '3/7/2017'
-    author = 'Xiangchen Li'
-    version_number = '1.0'
-    print("\nRunning Program {0}...".format(program_name))
-    version_string = '{0} version {1} Last Updated {2} by {3}'.format(program_name, version_number,
-                                                                      last_updated, author)
-    description = '''
-    Description:
-    This script concatenates all sequences in a fasta file into one single long sequence.
 
-    '''
-    additional_program_info = '''
-    Additional Program Information:
-    The purpose of this is to run an entire set of coding sequences as one long sequence in dnaSP.
-    If the argument -sub is supplied then only a subset of sequences given as a table will be concatenated.
-    Otherwise the entire set of sequences are concatenated.
-    '''
-    start_time = time.time()  # keeps track of how long the script takes to run
+def concatenate_fasta(input_file, output_file, subset_file):
+    # program_name = 'concatenate_fasta.py'
+    # last_updated = '3/7/2017'
+    # author = 'Xiangchen Li'
+    # version_number = '1.0'
+    # print("\nRunning Program {0}...".format(program_name))
+    # version_string = '{0} version {1} Last Updated {2} by {3}'.format(program_name, version_number,
+    #                                                                   last_updated, author)
+    # description = '''
+    # Description:
+    # This script concatenates all sequences in a fasta file into one single long sequence.
+    #
+    # '''
+    # additional_program_info = '''
+    # Additional Program Information:
+    # The purpose of this is to run an entire set of coding sequences as one long sequence in dnaSP.
+    # If the argument -sub is supplied then only a subset of sequences given as a table will be concatenated.
+    # Otherwise the entire set of sequences are concatenated.
+    # '''
+    # start_time = time.time()  # keeps track of how long the script takes to run
     # Set Up Argument Parsing
     # Create argument parser that will automatically return help texts from global variables above
-    parser = argparse.ArgumentParser(description=description, epilog=additional_program_info)
-    parser.add_argument('-i', '--input', required=False, dest='input', help='The the input file')
-    parser.add_argument('-o', '--output', required=True, dest='out', help='The desired name for the output file')
-    parser.add_argument('-sub', required=False, default="NONE", dest='sub',
-                        help='A subset of sequence names to pull and concatenate')
-    args = parser.parse_args()
+    # parser = argparse.ArgumentParser(description=description, epilog=additional_program_info)
+    # parser.add_argument('-i', '--input', required=False, dest='input', help='The the input file')
+    # parser.add_argument('-o', '--output', required=True, dest='out', help='The desired name for the output file')
+    # parser.add_argument('-sub', required=False, default="NONE", dest='sub',
+    #                     help='A subset of sequence names to pull and concatenate')
+    # args = parser.parse_args()
 
     # Assign Arguments
-    input_file_name = args.input
-    output_file_name = args.out
-    use_subset_file = args.sub
+    # input_file_name = args.input
+    # output_file_name = args.out
+    # use_subset_file = args.sub
     nucleotide_list = ['A', 'T', 'C', 'G', 'a', 't', 'c', 'g', 'N']
-    read_file(input_file_name, use_subset_file)
+    read_file(input_file, output_file, nucleotide_list, subset_file)
     # Return time to run
-    time = time.time() - start_time
-    print('\nTime took to run: {0}'.format(time))
+    # time = time.time() - start_time
+    # print('\nTime took to run: {0}'.format(time))

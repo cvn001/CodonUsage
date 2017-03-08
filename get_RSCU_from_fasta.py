@@ -3,15 +3,16 @@
 # get_RSCU_from_fasta.py
 # written on 2/3/2017 by Xiangchen Li
 
-import time
-import argparse
+# import time
+# import argparse
 import numpy as np
 from Bio import SeqIO
 from collections import defaultdict
-
-
+from global_items import genetic_code
 # use the genetic code dictionary above to build
 # a new one to store counts in
+
+
 def create_count_dict():
     """Function to make a clean dictionary
     to keep counts of codons in"""
@@ -25,7 +26,7 @@ def create_count_dict():
 
 # we also need the reverse dictionary, where each list of synonymous
 # codons is paired with its amino acid
-def build_inverse_code():
+def build_inverse_code(codon_list):
     """
     Function to reverse the genetic code entered above
     so that amino acids key to lists of synonymous codons
@@ -43,7 +44,7 @@ def build_inverse_code():
     return aa_list, rev_code
 
 
-def get_counts():
+def get_counts(input_file):
     """
     Function to read the fasta file and
     count the codon use
@@ -52,7 +53,7 @@ def get_counts():
     data_dict = defaultdict()
     total_ambiguous = 0  # keep count of ambiguous codons that have 'N's in them
     total_codons = 0
-    fas_seqs = SeqIO.parse(open(infile_name), 'fasta')
+    fas_seqs = SeqIO.parse(open(input_file), 'fasta')
     for seqRecord in fas_seqs:
         seq = str(seqRecord.seq)
         seq_id = seqRecord.id
@@ -81,7 +82,7 @@ def get_counts():
     return gene_list, data_dict
 
 
-def get_aa_totals(aa_list, codon_count_dict):
+def get_aa_totals(aa_list, codon_list, codon_count_dict):
     """Function to get the total number of times an amino
     acid appears in a sequence by totaling the counts of its
     synonymous codons"""
@@ -95,8 +96,10 @@ def get_aa_totals(aa_list, codon_count_dict):
     return aa_totals
 
 
-def calculate_rscu(aa_list, rev_code, gene_list, data_dict):
+def calculate_rscu(aa_list, rev_code, gene_list, data_dict, interesting):
     """Go through each gene and convert the counts data to RSCU"""
+    codon_list = list(genetic_code.keys())  # global variable of all codons
+    codon_list.sort()
     if interesting in aa_list:
         print("\n-----------------------------------")
         print("Results for amino acid of interest: {0}".format(interesting))
@@ -148,7 +151,7 @@ def organize_codons(rev_code, aa_list):
     return sorted_codon_list, sorted_aa
 
 
-def output(rscu_dict, gene_list, sorted_codon_list, sorted_aa):
+def output(output_file, rscu_dict, gene_list, sorted_codon_list, sorted_aa, debug):
     """Function to output the data as a table"""
     header_list = ['contig']
     header_2_list = ['contig']
@@ -161,7 +164,7 @@ def output(rscu_dict, gene_list, sorted_codon_list, sorted_aa):
         print(header_list)
         print(len(header_2_list))
         print(header_2_list)
-    with open(outfile_name, 'w') as out:
+    with open(output_file, 'w') as out:
         header_1 = "\t".join(header_list)
         # header_2 = "\t".join(header_2_list)
         out.write(header_1)
@@ -174,75 +177,59 @@ def output(rscu_dict, gene_list, sorted_codon_list, sorted_aa):
             out.write("\n" + "\t".join(data_list))
 
 
-if __name__ == '__main__':
-    program_name = 'get_RSCU_from_fasta.py'
-    last_updated = '2/3/2017'
-    by = 'Xiangchen Li'
-    version_number = '1.0'
-    print("\nRunning Program {0}...".format(program_name))
-    version_string = '{0} version {1} Last Updated {2} by {3}'.format(program_name, version_number,
-                                                                      last_updated, by)
-    description = '''
-    Description:
-    This program reads through a fasta file of coding sequences.
-    It divides the sequence into codons assuming the reading frame begins with the
-    first nucleotide.
-    It outputs a table with each sequence ID linked to the RSCU (relative synonymous codon usage)
-    for each codon and the species name (66 column table).
-    '''
-    additional_program_info = '''
-    Additional Program Information:
-    Note the fasta must be RNA.
-
-    This script has been tested against output from dnaSP.
-
-    Ambiguous codons that include any uncertain nucleotide
-    such as N, W or Y are ignored in the analysis.
-    '''
-    start_time = time.time()  # keeps track of how long the script takes to run
-    # Set Up Argument Parsing
-    # create argument parser that will automatically return help texts from global variables above
-    parser = argparse.ArgumentParser(description=description,
-                                     epilog=additional_program_info)
-    parser.add_argument('-i', required=True, dest='input', help='The the input file name')
-    parser.add_argument('-o', required=True, dest='output', help='The the desired output file name')
-    parser.add_argument('-interest', required=False, default='non', dest='interest',
-                        help='Enter a codon or amino acid (three letter notation) you are interested '
-                             'in to view its count data individually in standard output.')
-    args = parser.parse_args()
+def get_rscu(input_file, output_file, interesting, debug=None):
+    # program_name = 'get_RSCU_from_fasta.py'
+    # last_updated = '2/3/2017'
+    # by = 'Xiangchen Li'
+    # version_number = '1.0'
+    # print("\nRunning Program {0}...".format(program_name))
+    # version_string = '{0} version {1} Last Updated {2} by {3}'.format(program_name, version_number,
+    #                                                                   last_updated, by)
+    # description = '''
+    # Description:
+    # This program reads through a fasta file of coding sequences.
+    # It divides the sequence into codons assuming the reading frame begins with the
+    # first nucleotide.
+    # It outputs a table with each sequence ID linked to the RSCU (relative synonymous codon usage)
+    # for each codon and the species name (66 column table).
+    # '''
+    # additional_program_info = '''
+    # Additional Program Information:
+    # Note the fasta must be RNA.
+    #
+    # This script has been tested against output from dnaSP.
+    #
+    # Ambiguous codons that include any uncertain nucleotide
+    # such as N, W or Y are ignored in the analysis.
+    # '''
+    # start_time = time.time()  # keeps track of how long the script takes to run
+    # # Set Up Argument Parsing
+    # # create argument parser that will automatically return help texts from global variables above
+    # parser = argparse.ArgumentParser(description=description,
+    #                                  epilog=additional_program_info)
+    # parser.add_argument('-i', required=True, dest='input', help='The the input file name')
+    # parser.add_argument('-o', required=True, dest='output', help='The the desired output file name')
+    # parser.add_argument('-interest', required=False, default='non', dest='interest',
+    #                     help='Enter a codon or amino acid (three letter notation) you are interested '
+    #                          'in to view its count data individually in standard output.')
+    # args = parser.parse_args()
     # Usage
     # get_RSCU_from_fasta.py -i sequences.fasta -o codon_RSCUs.txt
-    # Assign Arguments
-    infile_name = args.input
-    outfile_name = args.output
-    interesting = args.interest
-    debug = False
+    # # Assign Arguments
+    # infile_name = args.input
+    # outfile_name = args.output
+    # interesting = args.interest
     # Species = args.spp
     # set up genetic code
-    genetic_code = {"TTT": "Phe", "TTC": "Phe", "TTA": "Leu", "TTG": "Leu",
-                    "TCT": "Ser", "TCC": "Ser", "TCA": "Ser", "TCG": "Ser",
-                    "TAT": "Tyr", "TAC": "Tyr", "TAA": "STOP", "TAG": "STOP",
-                    "TGT": "Cys", "TGC": "Cys", "TGA": "STOP", "TGG": "Trp",
-                    "CTT": "Leu", "CTC": "Leu", "CTA": "Leu", "CTG": "Leu",
-                    "CCT": "Pro", "CCC": "Pro", "CCA": "Pro", "CCG": "Pro",
-                    "CAT": "His", "CAC": "His", "CAA": "Gln", "CAG": "Gln",
-                    "CGT": "Arg", "CGC": "Arg", "CGA": "Arg", "CGG": "Arg",
-                    "ATT": "Ile", "ATC": "Ile", "ATA": "Ile", "ATG": "Met",
-                    "ACT": "Thr", "ACC": "Thr", "ACA": "Thr", "ACG": "Thr",
-                    "AAT": "Asn", "AAC": "Asn", "AAA": "Lys", "AAG": "Lys",
-                    "AGT": "Ser", "AGC": "Ser", "AGA": "Arg", "AGG": "Arg",
-                    "GTT": "Val", "GTC": "Val", "GTA": "Val", "GTG": "Val",
-                    "GCT": "Ala", "GCC": "Ala", "GCA": "Ala", "GCG": "Ala",
-                    "GAT": "Asp", "GAC": "Asp", "GAA": "Glu", "GAG": "Glu",
-                    "GGT": "Gly", "GGC": "Gly", "GGA": "Gly", "GGG": "Gly"}
     # set up a list of the codons
     codon_list = list(genetic_code.keys())  # global variable of all codons
     codon_list.sort()
-    (all_aa_list, all_rev_code) = build_inverse_code()
-    (all_gene_list, all_data_dict) = get_counts()
-    all_rscu_dict = calculate_rscu(all_aa_list, all_rev_code, all_gene_list, all_data_dict)
-    (the_sorted_codon_list, all_sorted_aa) = organize_codons(all_rev_code, all_aa_list)
-    output(all_rscu_dict, all_gene_list, the_sorted_codon_list, all_sorted_aa)
+    (aa_list, rev_code) = build_inverse_code(codon_list)
+    (gene_list, data_dict) = get_counts(input_file)
+    rscu_dict = calculate_rscu(aa_list, rev_code, gene_list, data_dict, interesting)
+    (sorted_codon_list, sorted_aa) = organize_codons(rev_code, aa_list)
+    output(output_file, rscu_dict, gene_list, sorted_codon_list, sorted_aa, debug)
     # return time to run
-    time = time.time() - start_time
-    print('\nTime took to run: {0}'.format(time))
+    # time = time.time() - start_time
+    # print('\nTime took to run: {0}'.format(time))
+
