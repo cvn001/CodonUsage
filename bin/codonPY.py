@@ -85,7 +85,7 @@ def each_step(step, input_file, fname):
         step_dir = os.path.join(args.outdirname, 'CAI')
         if not os.path.exists(step_dir):
             os.makedirs(step_dir)
-        wi_dir = os.path.join(args.outdirname, 'R_A')
+        wi_dir = os.path.join(args.outdirname, 'Relative_Adaptiveness')
         wi_file = os.path.join(wi_dir, fname + '.wi')
         if not os.path.exists(wi_file):
             logger.warning('The essential wi values files are not exist, so go back step 2.')
