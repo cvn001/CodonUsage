@@ -40,7 +40,7 @@ setup(
     platforms="Posix; MacOS X",
     url="http://cvn001.github.io/codonPY/",  # project home page
     download_url="https://github.com/cvn001/codonPY/releases",
-    scripts=[os.path.join('bin', 'src.py')],
+    scripts=[os.path.join('bin', 'codonPY.py')],
     packages=['codonPY'],
     package_data={'codonPY': ['data/']},
     include_package_date=True,
