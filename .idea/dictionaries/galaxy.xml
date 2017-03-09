@@ -3,7 +3,9 @@
     <words>
       <w>adaptiveness</w>
       <w>arginine</w>
+      <w>asctime</w>
       <w>behura</w>
+      <w>bioinformatics</w>
       <w>cdns</w>
       <w>codon</w>
       <w>codons</w>
@@ -14,15 +16,19 @@
       <w>fasta</w>
       <w>homozygosities</w>
       <w>homozygosity</w>
+      <w>makedirs</w>
       <w>millepora</w>
       <w>noblk</w>
       <w>nomenu</w>
       <w>nowarn</w>
+      <w>prog</w>
       <w>proline</w>
       <w>rscu</w>
       <w>rscus</w>
+      <w>scipy</w>
       <w>serine</w>
       <w>severson</w>
+      <w>shutil</w>
       <w>threonine</w>
       <w>uimax</w>
       <w>xmax</w>
