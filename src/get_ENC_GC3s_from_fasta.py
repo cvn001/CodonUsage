@@ -27,7 +27,8 @@ def run_codonw(each_type, fasta_file, out_file):
 
 def main_process(input_file, output_file):
     run_list = [input_file, output_file]
-    run_codonw('gc3s', run_list[0], run_list[1])
+    gc3s_bin = os.path.join('src', 'gc3s')
+    run_codonw(gc3s_bin, run_list[0], run_list[1])
     tmp_result_file = run_list[1]
     final_result_lines = ''
     with open(tmp_result_file, 'r') as f1:
