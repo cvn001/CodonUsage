@@ -3,6 +3,7 @@
     <words>
       <w>adaptiveness</w>
       <w>arginine</w>
+      <w>argparse</w>
       <w>asctime</w>
       <w>behura</w>
       <w>bioinformatics</w>
@@ -13,6 +14,8 @@
       <w>condonw</w>
       <w>contig</w>
       <w>contigs</w>
+      <w>defaultdict</w>
+      <w>dest</w>
       <w>fasta</w>
       <w>homozygosities</w>
       <w>homozygosity</w>
@@ -29,8 +32,11 @@
       <w>serine</w>
       <w>severson</w>
       <w>shutil</w>
+      <w>subseq</w>
+      <w>subsequence</w>
       <w>threonine</w>
       <w>uimax</w>
+      <w>xiangchen</w>
       <w>xmax</w>
     </words>
   </dictionary>

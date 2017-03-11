@@ -27,3 +27,24 @@ cpg_codon_list = ['TCT', 'TCC', 'TCA', 'TCG', 'AGT', 'AGC',  # serine
                   'ACT', 'ACC', 'ACA', 'ACG',  # threonine
                   'GCT', 'GCC', 'GCA', 'GCG',  # alanine
                   'CGT', 'CGC', 'CGA', 'CGG', 'AGA', 'AGG']  # arginine
+
+# RNA codon table from http://en.wikipedia.org/wiki/Genetic_code
+degenerated_codons = {'Lys': ('AAA', 'AAG'),
+                      'Gln': ('CAA', 'CAG'),
+                      'Tyr': ('TAT', 'TAC'),
+                      'Asn': ('AAT', 'AAC'),
+                      'Glu': ('GAA', 'GAG'),
+                      'His': ('CAT', 'CAC'),
+                      'Asp': ('GAT', 'GAC'),
+                      'Phe': ('TTT', 'TTC'),
+                      'Cys': ('TGT', 'TGC'),
+                      'STOP': ('TAA', 'TGA', 'TAG'),
+                      'Ile': ('ATT', 'ATC', 'ATA'),
+                      'Ala': ('GCT', 'GCC', 'GCA', 'GCG'),
+                      'Pro': ('CCT', 'CCC', 'CCA', 'CCG'),
+                      'Thr': ('ACT', 'ACC', 'ACA', 'ACG'),
+                      'Gly': ('GGT', 'GGC', 'GGA', 'GGG'),
+                      'Val': ('GTT', 'GTC', 'GTA', 'GTG'),
+                      'Leu': ('TTA', 'TTG', 'CTT', 'CTC', 'CTA', 'CTG'),
+                      'Arg': ('CGT', 'CGC', 'CGA', 'CGG', 'AGA', 'AGG'),
+                      'Ser': ('TCT', 'TCC', 'TCA', 'TCG', 'AGT', 'AGC')}
