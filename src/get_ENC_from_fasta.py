@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-# Introduction: 
+# Introduction: This script is used to get effective number of codons (ENC) from fasta
+#               Input is a Seq format object (Bio.SeqIO)
 # Created by galaxy on 2017/3/10 0010 17:37
 
 from Bio import SeqIO
@@ -47,7 +48,7 @@ def read_seq(seq, codon_dict, degeneracy_dict):
     return data, amino_acid_dict, seq_degeneracy_dict
 
 
-def calculate_nc(data, degeneracy_dict, amino_acid_dict, seq_degeneracy_dict, all_dict):
+def calculator(data, degeneracy_dict, amino_acid_dict, seq_degeneracy_dict, all_dict):
     aa_dict = defaultdict(float)
     for amino_acid in degeneracy_dict.keys():
         aa_codons = degeneracy_dict[amino_acid][0]
@@ -67,15 +68,15 @@ def calculate_nc(data, degeneracy_dict, amino_acid_dict, seq_degeneracy_dict, al
         for aa in each_deg_aa_list:
             f_mean += aa_dict[aa] / aa_num
         f_dict[each_deg] = f_mean
-    nc = 2 + 9 / f_dict[2] + 1 / f_dict[3] + 5 / f_dict[4] + 3 / f_dict[6]
-    return nc
+    enc = 2 + 9 / f_dict[2] + 1 / f_dict[3] + 5 / f_dict[4] + 3 / f_dict[6]
+    return enc
 
 
-def each_seq_run(input_file):
+def get_enc(query_seq, precision=2):
     (degeneracy_dict, codon_dict, all_dict) = degenerated()
-    seq_record = SeqIO.parse(input_file, 'fasta')
-    seq_string = str(seq_record.seq).upper().replace('T', 'U')
+    seq_string = str(query_seq).upper().replace('T', 'U')
     (data, amino_acid_dict, seq_degeneracy_dict) = read_seq(seq_string, codon_dict, degeneracy_dict)
-    seq_nc = calculate_nc(data, degeneracy_dict, amino_acid_dict, seq_degeneracy_dict, all_dict)
-    return seq_nc
+    seq_enc = calculator(data, degeneracy_dict, amino_acid_dict, seq_degeneracy_dict, all_dict)
+    return round(seq_enc, precision)
+
 

@@ -17,13 +17,19 @@
       <w>defaultdict</w>
       <w>dest</w>
       <w>fasta</w>
+      <w>fname</w>
       <w>homozygosities</w>
       <w>homozygosity</w>
+      <w>indir</w>
+      <w>indirname</w>
+      <w>levelname</w>
       <w>makedirs</w>
       <w>millepora</w>
       <w>noblk</w>
       <w>nomenu</w>
       <w>nowarn</w>
+      <w>outdir</w>
+      <w>outdirname</w>
       <w>prog</w>
       <w>proline</w>
       <w>rscu</w>
