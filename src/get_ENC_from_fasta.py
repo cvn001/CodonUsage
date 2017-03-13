@@ -14,72 +14,91 @@ def degenerated():
     # prepare the dict of degenerated codons
     degeneracy_dict = defaultdict(list)
     codon_dict = defaultdict()
-    all_dict = defaultdict()
     for amino_acid, codons in degenerated_codons.items():
         degeneracy_class = len(codons)
-        all_dict.setdefault(degeneracy_class, []).append(amino_acid)
         degeneracy_dict[amino_acid] = [codons, degeneracy_class]
         for codon in codons:
             codon_dict[codon] = codons
-    return degeneracy_dict, codon_dict, all_dict
+    return degeneracy_dict, codon_dict
 
 
 def read_seq(seq, codon_dict, degeneracy_dict):
+    # 读取序列的长度
     max_seq = len(seq)
+    # 分离出所有的密码子形成一个数组
     query_codons = [seq[i:i + 3] for i in range(0, max_seq, 3)]
+    codon_num = len(query_codons)
+    print(codon_num)
+    # 初始化一个记录
     counts = defaultdict(int)
-    amino_acid_dict = defaultdict(int)
-    seq_degeneracy_dict = defaultdict(int)
+    # amino_acid_dict = defaultdict(int)
+    seq_degeneracy_dict = defaultdict(list)
     for codon in query_codons:
+        # 获取每个codon所对应的amino acid
         amino_acid = genetic_code[codon]
+        # 获取此氨基酸对应的兼并性
         aa_degeneracy = degeneracy_dict[amino_acid][1]
-        seq_degeneracy_dict.setdefault(aa_degeneracy, 0) + 1
+        # 统计该兼并性在u序列中出现的次数
+        seq_degeneracy_dict[aa_degeneracy].append(amino_acid)
+        # 统计该codon在序列出现的次数
         counts[codon] += 1
     # actual calculation of frequencies
     data = defaultdict(float)
     for codon in query_codons:
         if codon in codon_dict:
-            amino_acid = genetic_code[codon]
+            # amino_acid = genetic_code[codon]
+            # 该氨基酸所对应的所有同义密码子的数量的总和
             totals = sum(counts[deg] for deg in codon_dict[codon])
-            amino_acid_dict[amino_acid] = totals
-            print('{0}\t{1}'.format(amino_acid, str(totals)))
-            frequency = float(counts[codon]) / totals
-            # frequency = 1
+            # amino_acid_dict[amino_acid] = totals
+            # 该codon出现的次数除以其对应的氨基酸的所有同义密码子出现的次数
+            frequency = counts[codon] / totals
         else:
-            frequency = 'NA'
+            frequency = 1.00
+        # print('{0}\t{1}\n'.format(genetic_code[codon], str(totals)))
         data[codon] = frequency
-    return data, amino_acid_dict, seq_degeneracy_dict
+    return data, seq_degeneracy_dict, codon_num
 
 
-def calculator(data, degeneracy_dict, amino_acid_dict, seq_degeneracy_dict, all_dict):
+def calculator(data, degeneracy_dict, seq_degeneracy_dict, codon_num):
     aa_dict = defaultdict(float)
+    deg_dict = defaultdict(int)
     for amino_acid in degeneracy_dict.keys():
-        aa_codons = degeneracy_dict[amino_acid][0]
-        aa_s = 0
-        for each_codon in aa_codons:
-            codon_frequency = data[each_codon]
-            aa_s += codon_frequency ** 2
-        total_codons = amino_acid_dict[amino_acid]
-        aa_f = (total_codons * aa_s - 1) / (total_codons - 1)
-        aa_dict[amino_acid] = aa_f
-    degeneracy_list = [2, 3, 4, 6]
+        # 排除起始密码子和终止密码子
+        if amino_acid not in []:
+            aa_codons = degeneracy_dict[amino_acid][0]
+            aa_deg = degeneracy_dict[amino_acid][1]
+            aa_s = 0
+            deg_dict[aa_deg] += 1
+            # 计算该氨基酸所对应的所有同义密码子的频率平方之和
+            for each_codon in aa_codons:
+                codon_frequency = data[each_codon]
+                aa_s += codon_num * (codon_frequency ** 2) / (codon_num - 1)
+            # 该氨基酸在序列中出现的所有同义密码子的数量，也就是该氨基酸出现的次数
+            # total_codons = amino_acid_dict[amino_acid]
+            aa_f = aa_s - 1 / (codon_num - 1)
+            aa_dict[amino_acid] = aa_f
+    # 兼并性列表
+    degeneracy_list = [1, 2, 3, 4, 6]
     f_dict = defaultdict()
     for each_deg in degeneracy_list:
-        aa_num = seq_degeneracy_dict[each_deg]
-        each_deg_aa_list = all_dict[each_deg]
+        # aa_num = len(seq_degeneracy_dict[each_deg])
         f_mean = 0
-        for aa in each_deg_aa_list:
-            f_mean += aa_dict[aa] / aa_num
+        aa_dict = defaultdict()
+        for aa in seq_degeneracy_dict[each_deg]:
+            aa_dict[aa] = 1
+        deg_aa_num = len(aa_dict.keys())
+        f_mean += (aa_dict[aa]) / deg_aa_num
         f_dict[each_deg] = f_mean
+    # 最后计算得到该序列的enc值
     enc = 2 + 9 / f_dict[2] + 1 / f_dict[3] + 5 / f_dict[4] + 3 / f_dict[6]
     return enc
 
 
 def get_enc(query_seq, precision=2):
-    (degeneracy_dict, codon_dict, all_dict) = degenerated()
+    (degeneracy_dict, codon_dict) = degenerated()
     seq_string = str(query_seq).upper().replace('U', 'T')
-    (data, amino_acid_dict, seq_degeneracy_dict) = read_seq(seq_string, codon_dict, degeneracy_dict)
-    enc = calculator(data, degeneracy_dict, amino_acid_dict, seq_degeneracy_dict, all_dict)
+    (data, seq_degeneracy_dict, codon_num) = read_seq(seq_string, codon_dict, degeneracy_dict)
+    enc = calculator(data, degeneracy_dict, seq_degeneracy_dict, codon_num)
     return round(enc, precision)
 
 if __name__ == '__main__':
@@ -87,4 +106,5 @@ if __name__ == '__main__':
     seq_file = os.path.join(my_path, 'test.fna')
     for each_record in SeqIO.parse(seq_file, 'fasta'):
         seq_enc = get_enc(each_record.seq)
+        print(each_record.id)
         print(seq_enc)
