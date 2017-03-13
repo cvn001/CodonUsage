@@ -4,6 +4,7 @@
 #               Input is a Seq format object (Bio.SeqIO)
 # Created by galaxy on 2017/3/10 0010 17:37
 
+import os
 from Bio import SeqIO
 from collections import defaultdict
 from src.global_items import genetic_code, degenerated_codons
@@ -17,7 +18,7 @@ def degenerated():
     for amino_acid, codons in degenerated_codons.items():
         degeneracy_class = len(codons)
         all_dict.setdefault(degeneracy_class, []).append(amino_acid)
-        degeneracy_dict[amino_acid] = codons
+        degeneracy_dict[amino_acid] = [codons, degeneracy_class]
         for codon in codons:
             codon_dict[codon] = codons
     return degeneracy_dict, codon_dict, all_dict
@@ -31,8 +32,8 @@ def read_seq(seq, codon_dict, degeneracy_dict):
     seq_degeneracy_dict = defaultdict(int)
     for codon in query_codons:
         amino_acid = genetic_code[codon]
-        aa_degeneracy = degeneracy_dict[amino_acid][0]
-        seq_degeneracy_dict[aa_degeneracy] += 1
+        aa_degeneracy = degeneracy_dict[amino_acid][1]
+        seq_degeneracy_dict.setdefault(aa_degeneracy, 0) + 1
         counts[codon] += 1
     # actual calculation of frequencies
     data = defaultdict(float)
@@ -41,7 +42,9 @@ def read_seq(seq, codon_dict, degeneracy_dict):
             amino_acid = genetic_code[codon]
             totals = sum(counts[deg] for deg in codon_dict[codon])
             amino_acid_dict[amino_acid] = totals
+            print('{0}\t{1}'.format(amino_acid, str(totals)))
             frequency = float(counts[codon]) / totals
+            # frequency = 1
         else:
             frequency = 'NA'
         data[codon] = frequency
@@ -74,9 +77,14 @@ def calculator(data, degeneracy_dict, amino_acid_dict, seq_degeneracy_dict, all_
 
 def get_enc(query_seq, precision=2):
     (degeneracy_dict, codon_dict, all_dict) = degenerated()
-    seq_string = str(query_seq).upper().replace('T', 'U')
+    seq_string = str(query_seq).upper().replace('U', 'T')
     (data, amino_acid_dict, seq_degeneracy_dict) = read_seq(seq_string, codon_dict, degeneracy_dict)
-    seq_enc = calculator(data, degeneracy_dict, amino_acid_dict, seq_degeneracy_dict, all_dict)
-    return round(seq_enc, precision)
+    enc = calculator(data, degeneracy_dict, amino_acid_dict, seq_degeneracy_dict, all_dict)
+    return round(enc, precision)
 
-
+if __name__ == '__main__':
+    my_path = os.getcwd()
+    seq_file = os.path.join(my_path, 'test.fna')
+    for each_record in SeqIO.parse(seq_file, 'fasta'):
+        seq_enc = get_enc(each_record.seq)
+        print(seq_enc)
