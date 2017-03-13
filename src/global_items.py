@@ -28,7 +28,7 @@ cpg_codon_list = ['TCT', 'TCC', 'TCA', 'TCG', 'AGT', 'AGC',  # serine
                   'GCT', 'GCC', 'GCA', 'GCG',  # alanine
                   'CGT', 'CGC', 'CGA', 'CGG', 'AGA', 'AGG']  # arginine
 
-# RNA codon table from http://en.wikipedia.org/wiki/Genetic_code
+# cDNA codon table from http://en.wikipedia.org/wiki/Genetic_code
 degenerated_codons = {'Met': ['ATG'],
                       'Trp': ['TGG'],
                       'Lys': ['AAA', 'AAG'],
