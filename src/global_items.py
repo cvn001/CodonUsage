@@ -29,9 +29,7 @@ cpg_codon_list = ['TCT', 'TCC', 'TCA', 'TCG', 'AGT', 'AGC',  # serine
                   'CGT', 'CGC', 'CGA', 'CGG', 'AGA', 'AGG']  # arginine
 
 # cDNA codon table from http://en.wikipedia.org/wiki/Genetic_code
-degenerated_codons = {'Met': ['ATG'],
-                      'Trp': ['TGG'],
-                      'Lys': ['AAA', 'AAG'],
+degenerated_codons = {'Lys': ['AAA', 'AAG'],
                       'Gln': ['CAA', 'CAG'],
                       'Tyr': ['TAT', 'TAC'],
                       'Asn': ['AAT', 'AAC'],
@@ -40,7 +38,6 @@ degenerated_codons = {'Met': ['ATG'],
                       'Asp': ['GAT', 'GAC'],
                       'Phe': ['TTT', 'TTC'],
                       'Cys': ['TGT', 'TGC'],
-                      'STOP': ['TAA', 'TGA', 'TAG'],
                       'Ile': ['ATT', 'ATC', 'ATA'],
                       'Ala': ['GCT', 'GCC', 'GCA', 'GCG'],
                       'Pro': ['CCT', 'CCC', 'CCA', 'CCG'],
