@@ -53,7 +53,6 @@ def get_counts(input_file):
     gene_list = []
     data_dict = defaultdict()
     total_ambiguous = 0  # keep count of ambiguous codons that have 'N's in them
-    total_codons = 0
     fas_seqs = SeqIO.parse(open(input_file), 'fasta')
     for seqRecord in fas_seqs:
         seq = str(seqRecord.seq)
@@ -63,7 +62,6 @@ def get_counts(input_file):
         seq_codons = []  # list of the codons in this sequence
         data_dict[seq_id] = create_count_dict()  # set up empty counts dictionary for this gene
         for i in codon_indices:
-            total_codons += 1
             codon = seq[i:(i + 3)].upper()
             # skip ambiguous codons that have an N in them
             if "N" in codon:
@@ -119,8 +117,8 @@ def calculate_rscu(aa_list, rev_code, gene_list, data_dict, interesting):
                 continue
             expected = aa_count / number_synonymous
             # rather than count missing codons as zero, all codons get a minimum count of 1
-            # if codonCount == 0:
-            #     codonCount += 1
+            if codon_count == 0:
+                codon_count += 1
             rscu = float(codon_count) / expected
             if codon == interesting:
                 print("\n-----------------------------------")
@@ -210,4 +208,3 @@ def get_rscu(input_file, output_file, interesting, debug=None):
     rscu_dict = calculate_rscu(aa_list, rev_code, gene_list, data_dict, interesting)
     (sorted_codon_list, sorted_aa) = organize_codons(rev_code, aa_list)
     output(output_file, rscu_dict, gene_list, sorted_codon_list, sorted_aa, debug)
-

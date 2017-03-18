@@ -5,7 +5,6 @@
 
 
 from sys import exit
-
 from src.global_items import genetic_code
 
 

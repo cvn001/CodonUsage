@@ -4,8 +4,6 @@
 #               Input is a Seq format object (Bio.SeqIO)
 # Created by galaxy on 2017/3/10 0010 17:37
 
-# import os
-# from Bio import SeqIO
 from collections import defaultdict
 from src.global_items import *
 
@@ -83,17 +81,9 @@ def enc_calculation(aa_dict, codon_dict, seq_codon_dict, degeneracy_dict):
     return result
 
 
-def get_enc(query_seq):
+def get_enc(query_seq, precision=2):
     (degeneracy_dict, codon_dict) = degenerated()
     seq_string = str(query_seq).upper().replace('U', 'T')
     (aa_dict, seq_codon_dict) = read_seq(seq_string, genetic_code)
     result = enc_calculation(aa_dict, codon_dict, seq_codon_dict, degeneracy_dict)
-    return result
-
-
-# if __name__ == '__main__':
-#     my_path = os.getcwd()
-#     seq_file = os.path.join(my_path, 'test.fna')
-#     for each_record in SeqIO.parse(seq_file, 'fasta'):
-#         seq_enc = get_enc(each_record.seq)
-#         print(seq_enc)
+    return round(result, precision)

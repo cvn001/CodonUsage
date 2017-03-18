@@ -15,7 +15,6 @@ from src.concatenate_fasta import concatenate
 from src.get_CAI_from_fasta import calculate_cai
 from src.get_ENC_GC3s_from_fasta import get_enc_gc3s
 from src.get_RSCU_from_fasta import get_rscu
-from src.integrate_results import integrate_enc
 
 
 def last_exception():
@@ -36,9 +35,7 @@ def parse_cmdline():
     parser.add_argument("-o", "--outdir", dest="outdirname", action="store", default=None,
                         type=str, help="Output directory")
     parser.add_argument("-p", "--step", type=int, dest="step", default=0,
-                        help="Which part will be run? [0|1|2|3|4]")
-    # parser.add_argument("-t", "--threads", type=int, dest="threads", default=cpu_count(),
-    #                     help="How many threads will be used? [default all]")
+                        help="Which part will be run?\n 1: RSCU\n 2: Wi\n 3: CAI\n 4: ENC&GC3s\n")
     parser.add_argument("-l", "--logfile", dest="logfile", action="store", default=None,
                         type=str, help="Logfile location")
     parser.add_argument("-v", "--verbose", dest="verbose", action="store_true", default=False,
@@ -67,7 +64,6 @@ def each_step(step, input_file, fname):
             os.makedirs(step_dir)
         output_file = os.path.join(step_dir, fname + '.rscu')
         get_rscu(input_file, output_file, args.interest)
-        logger.info('Step 1 done')
     elif step == 2:
         logger.info('Step 2: calculate relative adaptiveness (W) from {0}'.format(input_file))
         step_dir = os.path.join(args.outdirname, 'Relative_Adaptiveness')
@@ -98,9 +94,8 @@ def each_step(step, input_file, fname):
         if not os.path.exists(step_dir):
             os.makedirs(step_dir)
         output_file = os.path.join(step_dir, fname + '.enc_gc3s')
-        get_enc_gc3s(input_file, output_file)
-        message = integrate_enc(args.outdirname)
-        logger.info(message)
+        precision = 2
+        get_enc_gc3s(input_file, output_file, precision)
 
 
 def separate_run(step, input_dir):
@@ -117,12 +112,6 @@ def auto_run(input_dir):
     step_list = [1, 2, 3, 4]
     for i in step_list:
         separate_run(i, input_dir)
-
-
-# def multi_process():
-#     p = Pool(args.threads)
-#     out_put = os.path.join()
-#     return
 
 
 if __name__ == '__main__':

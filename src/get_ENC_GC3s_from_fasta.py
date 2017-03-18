@@ -1,52 +1,30 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-# Introduction: This script is used to calculate ENC (Nc) and GC3s from each genome.
-# Created by galaxy on 2017/3/2 0002 21:38
+# Introduction: This script is used to calculate:
+#               1. GC3s (s);
+#               2. ENC;
+#               3. ENC expected: (2 + s + 29/(s^2 + (1 − s)^2))
+# Created by Xiangchen Li on 2017/3/18 17:10
 
-import os
-import sys
-import re
-import subprocess
-
-
-def enc_expected_fun(s):
-    enc_expected = 2 + s + 29 / (s ** 2 + (1 - s) ** 2)
-    return enc_expected
+from Bio import SeqIO
+from collections import defaultdict
+from src.get_GC3s_from_fasta import get_gc3s
+from src.get_ENC_from_fasta import get_enc
 
 
-def run_codonw(each_type, fasta_file, out_file):
-    devnull = open(os.devnull, 'w')
-    cmd = '{0} {1} {2} -noblk -nomenu -nowarn -silent -human -fasta -enc'.format(each_type,
-                                                                                 fasta_file,
-                                                                                 out_file)
-    try:
-        subprocess.call(cmd, shell=True, stdout=devnull, stderr=devnull)
-    except OSError:
-        sys.exit(1)
-
-
-def main_process(input_file, output_file):
-    run_list = [input_file, output_file]
-    gc3s_bin = 'gc3s'
-    run_codonw(gc3s_bin, run_list[0], run_list[1])
-    tmp_result_file = run_list[1]
-    final_result_lines = ''
-    with open(tmp_result_file, 'r') as f1:
-        result_lines = f1.readlines()
-        tmp_header = result_lines[0].strip()
-        result_header = re.sub(r'\s+', '\t', tmp_header) + '\tENC_expected\n'
-        a_line = result_lines[1].strip()
-        b_line = re.sub(r'\s+', '\t', a_line)
-        b_list = b_line.strip().split('\t')
-        gc3s = float(b_list[2])
-        enc_expected = enc_expected_fun(gc3s)
-        result_line = '{0}\t{1}\t{2}\n'.format(b_list[1], b_list[2], str(enc_expected))
-        final_result_lines += result_header.replace('title\t', '') + result_line
-    final_result_file = run_list[1]
-    os.remove(tmp_result_file)
-    with open(final_result_file, 'w') as f2:
-        f2.write(final_result_lines)
-
-
-def get_enc_gc3s(input_file, output_file):
-    main_process(input_file, output_file)
+def get_enc_gc3s(input_file, output_file, precision=2):
+    seq_result_dict = defaultdict()
+    for seq_record in SeqIO.parse(input_file, 'fasta'):
+        seq_string = str(seq_record.seq)
+        seq_id = str(seq_record.id)
+        seq_s = get_gc3s(seq_string, precision)
+        seq_enc = get_enc(seq_string, precision)
+        expected_enc = 2 + seq_s + 29 / (pow(seq_s, 2) + pow((1-seq_s), 2))
+        seq_result_dict[seq_id] = [seq_s, seq_enc, round(expected_enc, precision)]
+    with open(output_file, 'w') as f1:
+        header = 'ID\tGC3s\tENC\tENC_expected\n'
+        f1.write(header)
+        for seq, result in seq_result_dict.items():
+            result_line = '{0}\t{1}\t{2}\t{3}\n'.format(seq, str(result[0]),
+                                                        str(result[1]), str(result[2]))
+            f1.write(result_line)
